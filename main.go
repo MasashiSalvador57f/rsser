@@ -24,6 +24,7 @@ const (
 	fetchFeed       = "fetch_feed"
 	listFeedItems   = "list_feed_items"
 	clearFeedItems  = "clear_feed_items"
+	debug           = "debug"
 )
 
 func main() {
@@ -171,6 +172,10 @@ func main() {
 		if err != nil {
 			log.Fatalf("error in deleting : %v", err)
 		}
+		os.Exit(0)
+	case debug:
+		ks := service.NewKeywordService()
+		fmt.Println(ks)
 		os.Exit(0)
 	}
 
