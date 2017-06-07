@@ -9,7 +9,7 @@ import (
 
 // FeedItem is corresponding to item in feeds.
 type FeedItem struct {
-	ID int64
+	ID int64 `json:"id"`
 	gofeed.Item
 }
 

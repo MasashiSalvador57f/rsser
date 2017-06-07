@@ -10,8 +10,10 @@ type FeedItem struct {
 }
 
 // Create register new feed item in datastore.
-func (fi *FeedItem) Create(efi *entity.FeedItem) {
+func (fi *FeedItem) Create(efi *entity.FeedItem) (*entity.FeedItem, error) {
 	err := db.Update(func(tx *bolt.Tx) error {
-
+		return nil
 	})
+
+	return nil, nil
 }
