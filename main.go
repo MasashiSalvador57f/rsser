@@ -8,6 +8,7 @@ import (
 
 	"github.com/MasashiSalvador57f/rsser/lib/db"
 	"github.com/MasashiSalvador57f/rsser/lib/db/entity"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
 )
@@ -15,6 +16,7 @@ import (
 const (
 	registerRSS     = "register_rss"
 	listFeeds       = "list_feeds"
+	showFeed        = "show_feed"
 	registerKeyword = "register_keyword"
 	listKeywords    = "list_keywords"
 	clearKeywords   = "clear_keywords"
@@ -118,6 +120,17 @@ func main() {
 		if err != nil {
 			log.Fatalf("error in deleting ... %v", err)
 		}
+		os.Exit(0)
+	case showFeed:
+		if feedID <= 0 {
+			log.Fatal("feed_id is requied")
+		}
+		fDB := new(db.Feed)
+		feed, err := fDB.GetOne(feedID)
+		if err != nil {
+			log.Fatalf("error in getting a feed %v", err)
+		}
+		spew.Dump(feed)
 		os.Exit(0)
 	}
 

@@ -40,6 +40,23 @@ func (fdb *Feed) Create(f *entity.Feed) (*entity.Feed, error) {
 	return f, err
 }
 
+// GetOne is ...
+func (fdb *Feed) GetOne(feedID uint64) (*entity.Feed, error) {
+	ef := new(entity.Feed)
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketNameregisteredFeedURL)
+		v := b.Get(itob(feedID))
+
+		if v == nil {
+			return nil
+		}
+
+		return json.Unmarshal(v, ef)
+	})
+
+	return ef, err
+}
+
 // GetAll is to get all data in bucket.
 func (fdb *Feed) GetAll() ([]*entity.Feed, error) {
 	fs := make([]*entity.Feed, 0, defaultCapSlice)
