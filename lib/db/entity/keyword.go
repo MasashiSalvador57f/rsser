@@ -7,9 +7,9 @@ import (
 
 // Keyword is ...
 type Keyword struct {
-	ID     int64
-	Title  string
-	FeedID int64
+	ID     int64  `json:"id"`
+	Title  string `json:"title"`
+	FeedID int64  `json:"feed_id"`
 }
 
 // ToString gives string format of Keyword.
