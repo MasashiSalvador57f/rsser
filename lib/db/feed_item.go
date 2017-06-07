@@ -15,5 +15,5 @@ func (fi *FeedItem) Create(efi *entity.FeedItem) (*entity.FeedItem, error) {
 		return nil
 	})
 
-	return nil, nil
+	return nil, err
 }

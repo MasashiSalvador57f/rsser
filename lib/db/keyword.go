@@ -24,8 +24,45 @@ func (k *Keyword) Create(ek *entity.Keyword) (*entity.Keyword, error) {
 			return errors.Wrap(err, "error in marshaling data")
 		}
 
-		return b.Put(itob(id), buf)
+		return b.Put([]byte(ek.GetKey()), buf)
 	})
 
 	return ek, err
+}
+
+// GetOne returns one entity that has key : title
+func (k *Keyword) GetOne(title string) (*entity.Keyword, error) {
+	ek := new(entity.Keyword)
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketNameKeyword)
+		v := b.Get([]byte(title))
+
+		return json.Unmarshal(v, ek)
+	})
+
+	return ek, err
+}
+
+// GetAll returns all the keywords in datastore.
+func (k *Keyword) GetAll() ([]*entity.Keyword, error) {
+	ks := make([]*entity.Keyword, 0, defaultCapSlice)
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketNameKeyword)
+
+		err := b.ForEach(func(k, v []byte) error {
+			keyword := new(entity.Keyword)
+			err := json.Unmarshal(v, keyword)
+
+			if err != nil {
+				return errors.Wrap(err, "feed unmarshal error")
+			}
+
+			ks = append(ks, keyword)
+			return nil
+		})
+		return err
+	})
+
+	return ks, err
 }

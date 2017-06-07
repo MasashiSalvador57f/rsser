@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -12,19 +13,26 @@ import (
 )
 
 const (
-	registerRSS = "register_rss"
-	listFeeds   = "list_feeds"
+	registerRSS     = "register_rss"
+	listFeeds       = "list_feeds"
+	registerKeyword = "register_keyword"
+	listKeywords    = "list_keywords"
 )
 
 func main() {
 	var (
 		commandName string
+		keyword     string
+		feedID      uint64
 		url         string
 	)
 
 	flag.StringVar(&commandName, "command", "", "command name you want to execute")
 	flag.StringVar(&commandName, "c", "", "command name you want to execute")
 	flag.StringVar(&url, "url", "", "feed url")
+	flag.StringVar(&keyword, "keyword", "", "keyword for feed")
+	flag.Uint64Var(&feedID, "feed_id", 0, "feed_id of keyword")
+
 	flag.Parse()
 
 	if len(commandName) <= 0 {
@@ -62,6 +70,43 @@ func main() {
 
 		for _, f := range fs {
 			log.Println(f.ToString())
+		}
+		os.Exit(0)
+	case registerKeyword:
+		if len(keyword) <= 0 || feedID <= 0 {
+			log.Fatalf("keyword & feed_id is required keyword: %v, feed_id:; %v", keyword, feedID)
+		}
+		keywordDB := new(db.Keyword)
+		k := new(entity.Keyword)
+
+		k, err := keywordDB.GetOne(keyword)
+		if err != nil {
+			log.Fatalf("error in getting keyword %v", err)
+		}
+		if k == nil {
+			k = &entity.Keyword{
+				Title:   keyword,
+				FeedIDs: []uint64{feedID},
+			}
+		} else {
+			k.FeedIDs = append(k.FeedIDs, feedID)
+		}
+
+		// Create or Update
+		k, err = keywordDB.Create(k)
+		if err != nil {
+			log.Fatalf("error when creating keyword %v", err)
+		}
+
+		os.Exit(0)
+	case listKeywords:
+		keywordDB := new(db.Keyword)
+		ks, err := keywordDB.GetAll()
+		if err != nil {
+			log.Fatalf("error in get data from db %v", err)
+		}
+		for _, k := range ks {
+			fmt.Println(k.ToString())
 		}
 		os.Exit(0)
 	}
