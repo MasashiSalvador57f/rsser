@@ -40,7 +40,7 @@ func (f *Fetcher) Fetch() error {
 
 	for _, fi := range feed.Items {
 		f.FeedItems = append(f.FeedItems, &entity.FeedItem{
-			0, fi,
+			0, f.feed.ID, fi,
 		})
 	}
 
