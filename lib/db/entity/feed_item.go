@@ -19,5 +19,6 @@ func (f *FeedItem) ToString() string {
 		fmt.Sprintf("%d", f.ID),
 		f.Title,
 		f.Description,
+		f.Link,
 	}, ",")
 }
