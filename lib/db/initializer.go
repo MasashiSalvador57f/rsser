@@ -17,7 +17,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("db file %s is not opened %v", dbFileName, err)
 	}
-	log.Printf("db is opend, %v", db.Stats())
+	log.Printf("[LOG] db is opend, %v", db.Stats())
 
 	createBucketsIfNotExists()
 	log.Println("[LOG] DB initialized")

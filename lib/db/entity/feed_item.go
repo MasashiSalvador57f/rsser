@@ -9,8 +9,8 @@ import (
 
 // FeedItem is corresponding to item in feeds.
 type FeedItem struct {
-	ID int64 `json:"id"`
-	gofeed.Item
+	ID uint64 `json:"id"`
+	*gofeed.Item
 }
 
 // ToString gives string format of feed item

@@ -8,6 +8,7 @@ import (
 
 	"github.com/MasashiSalvador57f/rsser/lib/db"
 	"github.com/MasashiSalvador57f/rsser/lib/db/entity"
+	"github.com/MasashiSalvador57f/rsser/lib/service"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
@@ -20,6 +21,9 @@ const (
 	registerKeyword = "register_keyword"
 	listKeywords    = "list_keywords"
 	clearKeywords   = "clear_keywords"
+	fetchFeed       = "fetch_feed"
+	listFeedItems   = "list_feed_items"
+	clearFeedItems  = "clear_feed_items"
 )
 
 func main() {
@@ -131,6 +135,42 @@ func main() {
 			log.Fatalf("error in getting a feed %v", err)
 		}
 		spew.Dump(feed)
+		os.Exit(0)
+	case fetchFeed:
+		if feedID <= 0 {
+			log.Fatal("feed_id is required!")
+		}
+
+		fetcher := service.NewFetcher(feedID)
+		if fetcher == nil {
+			log.Fatalf("no feed found with feed_id = %d", feedID)
+		}
+		err := fetcher.Fetch()
+		if err != nil {
+			log.Fatalf("error when fetching items of feed with feed_id = %d, : %v", feedID, err)
+		}
+		fiDB := new(db.FeedItem)
+		_, err = fiDB.Batch(fetcher.FeedItems)
+		if err != nil {
+			log.Fatalf("error in batch creating feed items %v", err)
+		}
+		os.Exit(0)
+	case listFeedItems:
+		fiDB := new(db.FeedItem)
+		fis, err := fiDB.GetAll()
+		if err != nil {
+			log.Fatalf("error in GetAll feed_items %v", err)
+		}
+		for _, fi := range fis {
+			log.Println(fi.ToString())
+		}
+		os.Exit(0)
+	case clearFeedItems:
+		fiDB := new(db.FeedItem)
+		err := fiDB.DeleteAll()
+		if err != nil {
+			log.Fatalf("error in deleting : %v", err)
+		}
 		os.Exit(0)
 	}
 
