@@ -27,6 +27,7 @@ func createBucketsIfNotExists() {
 	log.Println("[LOG] bucket initialization started")
 	createBucketWithName(bucketNameregisteredFeedURL)
 	createBucketWithName(bucketNameFeedItem)
+	createBucketWithName(bucketNameKeyword)
 	log.Println("[LOG] bucket initialization finished")
 }
 

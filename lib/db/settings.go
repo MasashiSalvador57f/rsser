@@ -10,11 +10,13 @@ const (
 	// NameRegisteredFeedURL is the name for bucket for registered feed urls
 	nameRegisteredFeedURL = "registered_feeds"
 	nameFeedItem          = "feed_items"
+	nameKeyword           = "keyword"
 )
 
 var (
 	bucketNameregisteredFeedURL = []byte(nameRegisteredFeedURL)
 	bucketNameFeedItem          = []byte(nameFeedItem)
+	bucketNameKeyword           = []byte(nameKeyword)
 )
 
 func itob(v uint64) []byte {
