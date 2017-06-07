@@ -1,36 +1,36 @@
 package main
 
-import "net/http"
-
-const (
-	port = ":19022"
+import (
+	"flag"
+	"log"
+	"os"
 )
 
 const (
-	rpFeeds = "/feeds"
+	registerRSS = "register_rss"
 )
 
 func main() {
-	http.HandleFunc(rpFeeds, handleFeedReq)
-}
+	var (
+		commandName string
+	)
 
-func handleFeedReq(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		w.WriteHeader(http.StatusOK)
-		return
-	case http.MethodGet:
-		w.WriteHeader(http.StatusOK)
-		return
-	case http.MethodPut:
-		w.WriteHeader(http.StatusOK)
-		return
-	case http.MethodDelete:
-		w.WriteHeader(http.StatusOK)
-		return
+	flag.StringVar(&commandName, "command", "", "command name you want to execute")
+	flag.StringVar(&commandName, "c", "", "command name you want to execute")
+	flag.Parse()
+
+	if len(commandName) <= 0 {
+		log.Fatal("command name is required")
 	}
 
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("not found"))
-	return
+	log.Printf("command is %s", commandName)
+
+	switch commandName {
+	case registerRSS:
+		log.Println("register rss start")
+		log.Println("register rss end")
+		os.Exit(0)
+	}
+
+	log.Fatalf("no command corresponding to given command name : %s", commandName)
 }
