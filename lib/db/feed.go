@@ -14,19 +14,14 @@ type Feed struct {
 }
 
 // Create is to create new feed url in bucket.
-func (fdb *Feed) Create(url, title string) (*entity.Feed, error) {
-	var f *entity.Feed
+func (fdb *Feed) Create(f *entity.Feed) (*entity.Feed, error) {
 
 	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucketNameregisteredFeedURL)
 
 		id, _ := b.NextSequence()
-		f = &entity.Feed{
-			ID:            id,
-			URL:           url,
-			Title:         title,
-			LastCheckedAt: time.Now().Unix(),
-		}
+		f.ID = id
+		f.LastCheckedAt = time.Now().String()
 
 		buf, err := json.Marshal(f)
 		if err != nil {

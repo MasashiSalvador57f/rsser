@@ -5,5 +5,6 @@ type Feed struct {
 	ID            uint64 `json:"id"`
 	URL           string `json:"url"`
 	Title         string `json:"title"`
-	LastCheckedAt int64  `json:"last_checked_at"`
+	UpdatedAt     string `json:"updated_at"`
+	LastCheckedAt string `json:"last_checked_at"`
 }
