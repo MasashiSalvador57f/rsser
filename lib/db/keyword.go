@@ -37,6 +37,10 @@ func (k *Keyword) GetOne(title string) (*entity.Keyword, error) {
 		b := tx.Bucket(bucketNameKeyword)
 		v := b.Get([]byte(title))
 
+		if v == nil {
+			return nil
+		}
+
 		return json.Unmarshal(v, ek)
 	})
 

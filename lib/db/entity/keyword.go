@@ -25,3 +25,14 @@ func (k *Keyword) ToString() string {
 func (k *Keyword) GetKey() []byte {
 	return []byte(k.Title)
 }
+
+// HasFeedID is ... (NOTE linear search ... :)
+func (k *Keyword) HasFeedID(feedID uint64) bool {
+	for _, id := range k.FeedIDs {
+		if id == feedID {
+			return true
+		}
+	}
+
+	return false
+}

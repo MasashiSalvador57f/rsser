@@ -33,7 +33,6 @@ func main() {
 	flag.StringVar(&url, "url", "", "feed url")
 	flag.StringVar(&keyword, "keyword", "", "keyword for feed")
 	flag.Uint64Var(&feedID, "feed_id", 0, "feed_id of keyword")
-
 	flag.Parse()
 
 	if len(commandName) <= 0 {
@@ -41,6 +40,7 @@ func main() {
 	}
 
 	log.Printf("command is %s", commandName)
+	log.Printf("keyword is %s", keyword)
 
 	switch commandName {
 	case registerRSS:
@@ -84,15 +84,17 @@ func main() {
 		if err != nil {
 			log.Fatalf("error in getting keyword %v", err)
 		}
-		if k == nil {
+		if k.ID <= 0 {
 			k = &entity.Keyword{
 				Title:   keyword,
 				FeedIDs: []uint64{feedID},
 			}
 		} else {
+			if k.HasFeedID(feedID) {
+				os.Exit(0)
+			}
 			k.FeedIDs = append(k.FeedIDs, feedID)
 		}
-
 		// Create or Update
 		k, err = keywordDB.Create(k)
 		if err != nil {
