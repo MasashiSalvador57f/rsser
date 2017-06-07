@@ -54,7 +54,16 @@ func main() {
 
 		os.Exit(0)
 	case listFeeds:
+		feedDB := new(db.Feed)
+		fs, err := feedDB.GetAll()
+		if err != nil {
+			log.Fatal(err)
+		}
 
+		for _, f := range fs {
+			log.Println(f.ToString())
+		}
+		os.Exit(0)
 	}
 
 	log.Fatalf("no command corresponding to given command name : %s", commandName)

@@ -13,6 +13,8 @@ import (
 type Feed struct {
 }
 
+const defaultCapSlice = 255
+
 // Create is to create new feed url in bucket.
 func (fdb *Feed) Create(f *entity.Feed) (*entity.Feed, error) {
 
@@ -36,4 +38,25 @@ func (fdb *Feed) Create(f *entity.Feed) (*entity.Feed, error) {
 	}
 
 	return f, err
+}
+
+// GetAll is to get all data in bucket.
+func (fdb *Feed) GetAll() ([]*entity.Feed, error) {
+	fs := make([]*entity.Feed, 0, defaultCapSlice)
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketNameregisteredFeedURL)
+
+		err := b.ForEach(func(k, v []byte) error {
+			f := new(entity.Feed)
+			err := json.Unmarshal(v, f)
+
+			if err != nil {
+				return errors.Wrap(err, "feed unmarshal error")
+			}
+			fs = append(fs, f)
+			return nil
+		})
+		return err
+	})
+	return fs, err
 }
