@@ -17,6 +17,7 @@ const (
 	listFeeds       = "list_feeds"
 	registerKeyword = "register_keyword"
 	listKeywords    = "list_keywords"
+	clearKeywords   = "clear_keywords"
 )
 
 func main() {
@@ -107,6 +108,13 @@ func main() {
 		}
 		for _, k := range ks {
 			fmt.Println(k.ToString())
+		}
+		os.Exit(0)
+	case clearKeywords:
+		keywordDB := new(db.Keyword)
+		err := keywordDB.DeleteAll()
+		if err != nil {
+			log.Fatalf("error in deleting ... %v", err)
 		}
 		os.Exit(0)
 	}

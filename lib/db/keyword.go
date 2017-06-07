@@ -43,6 +43,19 @@ func (k *Keyword) GetOne(title string) (*entity.Keyword, error) {
 	return ek, err
 }
 
+// DeleteAll is ...
+func (k *Keyword) DeleteAll() error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketNameKeyword)
+
+		return b.ForEach(func(k, v []byte) error {
+			return b.Delete(k)
+		})
+	})
+
+	return err
+}
+
 // GetAll returns all the keywords in datastore.
 func (k *Keyword) GetAll() ([]*entity.Keyword, error) {
 	ks := make([]*entity.Keyword, 0, defaultCapSlice)
