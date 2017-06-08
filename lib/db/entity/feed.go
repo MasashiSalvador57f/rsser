@@ -3,6 +3,7 @@ package entity
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 // Feed is a struct for feed entity.
@@ -21,4 +22,27 @@ func (f *Feed) ToString() string {
 		f.URL,
 		f.Title,
 	}, ",")
+}
+
+func getFormattedLastCheckedAt(raw string) string {
+	ts := strings.Split(raw, " ")
+	if len(ts) <= 1 {
+		return fmt.Sprintf("%s %s +0900 JST", ts[0], "00:00:00")
+	}
+
+	ymd := ts[0]
+	dt := strings.Split(ts[1], ".")[0]
+
+	return fmt.Sprintf("%s %s +0900 JST", ymd, dt)
+}
+
+// GetLastCheckedAt is ..
+func (f *Feed) GetLastCheckedAt() (*time.Time, error) {
+	s := getFormattedLastCheckedAt(f.LastCheckedAt)
+	t, err := time.Parse("2006-01-02 15:04:05 -0700 MST", s)
+	if err != nil {
+		return nil, err
+	}
+
+	return &t, nil
 }
