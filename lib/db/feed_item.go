@@ -25,7 +25,7 @@ func (fi *FeedItem) Batch(efis []*entity.FeedItem) ([]*entity.FeedItem, error) {
 				return errors.Wrap(err, "error in marshaling json")
 			}
 
-			b.Put(itob(id), buf)
+			b.Put([]byte(efi.Link), buf)
 		}
 
 		return nil
