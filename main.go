@@ -24,7 +24,7 @@ const (
 	fetchFeed       = "fetch_feed"
 	listFeedItems   = "list_feed_items"
 	clearFeedItems  = "clear_feed_items"
-	debug           = "debug"
+	filterFeedItems = "filter_feed_items"
 )
 
 func main() {
@@ -173,9 +173,33 @@ func main() {
 			log.Fatalf("error in deleting : %v", err)
 		}
 		os.Exit(0)
-	case debug:
-		ks := service.NewKeywordService()
-		fmt.Println(ks)
+	case filterFeedItems:
+		if feedID <= 0 {
+			log.Fatal("feed_id is required")
+		}
+		filter := service.NewFilter()
+		feDB := new(db.Feed)
+		feed, err := feDB.GetOne(feedID)
+		if feed.ID <= 0 || err != nil {
+			log.Fatalf("error in getting feed. error: %v", err)
+		}
+		filter.SetFeed(feed)
+
+		fiDB := new(db.FeedItem)
+		feedItems, err := fiDB.GetAll()
+		if err != nil {
+			log.Fatalf("error in get all feed item. error: %v", err)
+		}
+
+		filtered, err := filter.Do(feedItems)
+		if err != nil {
+			log.Fatalf("error in filtering. error : %v", err)
+		}
+
+		for _, item := range filtered {
+			fmt.Println(item.ToString())
+		}
+
 		os.Exit(0)
 	}
 

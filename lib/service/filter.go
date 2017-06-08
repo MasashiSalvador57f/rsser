@@ -42,14 +42,22 @@ func (f *Filter) Do(fis []*entity.FeedItem) ([]*entity.FeedItem, error) {
 		return nil, err
 	}
 
-	keywords := f.ks.feedIDKeywordsMap[f.feed.ID]
+	feedID := f.feed.ID
+	if len(f.ks.feedIDKeywordsMap) <= 0 {
+		return nil, nil
+	}
+	keywords := f.ks.feedIDKeywordsMap[feedID]
 	for _, item := range fis {
-		if lct.Before(*item.PublishedParsed) {
+		if item.FeedID != feedID {
+			continue
+		}
+		if item.PublishedParsed != nil && lct.Before(*item.PublishedParsed) {
 			continue
 		}
 		for _, k := range keywords {
-			if strings.Contains(item.Title, k) || strings.Contains(item.Description, k) {
+			if strings.Contains(item.Title, k) || strings.Contains(item.Description, k) || strings.Contains(item.Content, k) {
 				filtered = append(filtered, item)
+				continue
 			}
 		}
 	}

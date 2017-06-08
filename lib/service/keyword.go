@@ -19,6 +19,8 @@ func NewKeywordService() *Keyword {
 	if len(fk) <= 0 {
 		fk = initializeFeedIDKeywordMap()
 	}
+	ks.feedIDKeywordsMap = fk
+
 	return ks
 }
 
@@ -40,6 +42,5 @@ func initializeFeedIDKeywordMap() map[uint64][]string {
 			}
 		}
 	}
-
 	return fk
 }

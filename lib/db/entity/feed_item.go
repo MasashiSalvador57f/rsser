@@ -21,5 +21,7 @@ func (f *FeedItem) ToString() string {
 		f.Title,
 		f.Description,
 		f.Link,
+		fmt.Sprintf("published=%s", f.Published),
+		fmt.Sprintf("updated=%s", f.Updated),
 	}, ",")
 }
