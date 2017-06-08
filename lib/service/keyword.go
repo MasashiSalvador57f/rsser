@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/MasashiSalvador57f/rsser/lib/db"
-	"github.com/davecgh/go-spew/spew"
 )
 
 // Keyword is ..
@@ -20,7 +19,6 @@ func NewKeywordService() *Keyword {
 	if len(fk) <= 0 {
 		fk = initializeFeedIDKeywordMap()
 	}
-	spew.Dump(fk)
 	return ks
 }
 
