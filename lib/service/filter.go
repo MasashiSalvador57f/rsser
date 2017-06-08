@@ -1,13 +1,9 @@
 package service
 
 import (
-	"time"
-
 	"strings"
 
 	"github.com/MasashiSalvador57f/rsser/lib/db/entity"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/mmcdole/gofeed"
 )
 
 // Filter is ...
@@ -17,7 +13,6 @@ type Filter struct {
 }
 
 const capFilter = 128
-const layout = time.RFC3339
 
 // NewFilter is to filter feed_items.
 func NewFilter() *Filter {
@@ -63,21 +58,4 @@ func (f *Filter) Do(fis []*entity.FeedItem) ([]*entity.FeedItem, error) {
 	}
 
 	return filtered, nil
-}
-
-// FilterByLastFetched is ...
-func (f *Filter) FilterByLastFetched(is []*gofeed.Item, ld string) ([]*gofeed.Item, error) {
-	fis := make([]*gofeed.Item, 0, capFilter)
-	lastFetchedTime, err := time.Parse(layout, ld)
-	if err != nil {
-		return nil, err
-	}
-
-	spew.Dump(ld)
-	spew.Dump(lastFetchedTime)
-
-	for _, fi := range fis {
-		fis = append(fis, fi)
-	}
-	return fis, nil
 }
