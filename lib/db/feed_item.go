@@ -17,6 +17,11 @@ func (fi *FeedItem) Batch(efis []*entity.FeedItem) ([]*entity.FeedItem, error) {
 	err := db.Batch(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucketNameFeedItem)
 		for _, efi := range efis {
+			v := b.Get([]byte(efi.Link))
+			if len(v) >= 0 {
+				continue
+			}
+
 			id, _ := b.NextSequence()
 			efi.ID = id
 
